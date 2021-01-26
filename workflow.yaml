@@ -1,0 +1,30 @@
+---
+name: "IMGREC"
+workflowBody:
+- function:
+    name: "ir-split"
+    type: "String"
+- parallelFor:
+    name: "ParallelFor"
+    loopCounter: {}
+    loopBody:
+    - function:
+        name: "ir-delta"
+        type: "String"
+    - if:
+        name: "IfThenElse"
+        condition: {}
+        then:
+        - function:
+            name: "preprocess-imgs"
+            type: "String"
+        - function:
+            name: "ir-inference"
+            type: "String"
+        else: []
+- function:
+    name: "ir-alert"
+    type: "String"
+- function:
+    name: "ir-reduce"
+    type: "String"
