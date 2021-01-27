@@ -1,19 +1,24 @@
 const AWS = require('aws-sdk')
 const { getS3 } = require('./utils')
 
-const rekog = new AWS.Rekognition()
 
-exports.handler = (event, context) => {
+exports.handler = async (event, context) => {
 
-  // get images of this batch
   const imageS3Keys = event['imageS3Keys']
   const s3bucket = event['s3bucket']
+  const region = event['region']
+  
+  const rekog = new AWS.Rekognition({
+    region: region
+  })
+
+  // get images of this batch as Buffers
   const bufs = await Promise.all(
     imageS3Keys.map(imgS3Key => getS3(s3bucket, imgS3Key))
   )
 
   // submit all to AWS Rekognition for label detection
-  const results = await Promise.all(
+  let results = await Promise.all(
     bufs.map(buf => {
       const params = {
         Image: {
@@ -23,9 +28,13 @@ exports.handler = (event, context) => {
         MinConfidence: 60
       }
 
-      return rekog.detectLabels(params)
+      return rekog.detectLabels(params).promise()
     })
   )
 
-  console.log(results)
+  results = JSON.stringify(results, null, 2)
+
+  return {
+    predictions: results
+  }
 }
