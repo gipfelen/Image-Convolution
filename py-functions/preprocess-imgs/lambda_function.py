@@ -47,9 +47,20 @@ def lambda_handler(event, context):
     # Save cropped to file 
 
     #   croppedkey = 
-    croppedfpath = '/tmp/' + "cropped-" + fname 
+    croppedfname = "cropped-" + fname 
+    croppedfpath = '/tmp/' + croppedfname
     cv2.imwrite(croppedfpath, crop_img)
 
     print("wrote cropped img to " + croppedfpath)
 
-lambda_handler({ 's3bucket': 'jak-bridge-typical', 'imgss3keys': [ 'dogsofa.jpg']} ,None)
+    # Stash back to S3
+    croppedfkey = prefix + croppedfname 
+    cf = open(croppedfpath, 'r+b')
+    response = client.put_object(
+      Bucket=s3bucket,
+      Key=croppedfkey,
+      Body=cf 
+    )
+    print("stashed cropped img to s3 as ", croppedfkey)
+
+# lambda_handler({ 's3bucket': 'jak-bridge-typical', 'imgss3keys': [ 'dogsofa.jpg']} ,None)
