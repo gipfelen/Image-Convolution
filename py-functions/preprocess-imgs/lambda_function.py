@@ -10,6 +10,7 @@ def lambda_handler(event, context):
 
   # Each image
   client = boto3.client('s3')
+  croppedimgss3keys = []
   for imgss3key in imgss3keys:
 
     # Fetch image from S3
@@ -63,4 +64,8 @@ def lambda_handler(event, context):
     )
     print("stashed cropped img to s3 as ", croppedfkey)
 
-# lambda_handler({ 's3bucket': 'jak-bridge-typical', 'imgss3keys': [ 'dogsofa.jpg']} ,None)
+    croppedimgss3keys.append(croppedfkey)
+
+  return {
+    'croppedimgss3keys': croppedimgss3keys
+  }
