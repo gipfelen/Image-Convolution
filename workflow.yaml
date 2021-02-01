@@ -21,10 +21,29 @@ workflowBody:
         - function:
             name: "ir-inference"
             type: "String"
+        - if:
+            name: "IfThenElse0"
+            condition: {}
+            then:
+            - function:
+                name: "log-valid"
+                type: "String"
+            else:
+            - function:
+                name: "log-invalid"
+                type: "String"
         else: []
-- function:
-    name: "ir-alert"
-    type: "String"
 - function:
     name: "ir-reduce"
     type: "String"
+- if:
+    name: "IfThenElse1"
+    condition: {}
+    then:
+    - function:
+        name: "log-valid-batch"
+        type: "String"
+    else:
+    - function:
+        name: "log-invalid-batch"
+        type: "String"
