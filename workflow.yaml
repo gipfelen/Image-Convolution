@@ -11,9 +11,42 @@ workflowBody:
     - function:
         name: "preprocess-imgs"
         type: "String"
+        dataIns:
+        - name: "s3bucket"
+          type: "string"
+          source: "ParallelFor/s3bucket"
+        - name: "images_s3_keys"
+          type: "collection"
+          source: "ParallelFor/images_s3_keys"
+        dataOuts:
+        - name: "cropped_images_s3_keys"
+          type: "collection"
     - function:
         name: "ir-delta"
         type: "String"
+        dataIns:
+        - name: "cropped_images_s3_keys"
+          type: "collection"
+          source: "preprocess-imgs/cropped_images_s3_keys"
+        - name: "cropped_images_timestamps"
+          type: "collection"
+          source: "ParallelFor/cropped_images_timestamps"
+        - name: "s3bucket"
+          type: "string"
+          source: "ParallelFor/s3bucket"
+        dataOuts:
+        - name: "all_passed"
+          type: "bool"
+        - name: "invalid_units_frame_keys"
+          type: "collection"
+        - name: "invalid_units_timestamps"
+          type: "collection"
+        - name: "ingested_frame_keys"
+          type: "collection"
+        - name: "ingested_window_start_date_millis"
+          type: "number"
+        - name: "ingested_window_end_date_millis"
+          type: "number"
     - if:
         name: "IfThenElse"
         condition: {}
@@ -25,6 +58,20 @@ workflowBody:
         - function:
             name: "ir-convolute-reduce"
             type: "String"
+            dataIns:
+            - name: "invalid_units_frame_keys"
+              type: "collection"
+              source: "ir-delta/invalid_units_frame_keys"
+            - name: "invalid_units_timestamps"
+              type: "collection"
+              source: "ir-delta/invalid_units_timestamps"
+            dataOuts:
+            - name: "invalid_units_frame_keys"
+              type: "collection"
+            - name: "invalid_units_timestamps"
+              type: "collection"
+            - name: "invalid_units_deviations"
+              type: "collection"
         - function:
             name: "log-invalid"
             type: "String"
