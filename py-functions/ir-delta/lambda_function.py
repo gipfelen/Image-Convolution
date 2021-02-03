@@ -1,6 +1,11 @@
 import datetime 
 
 def lambda_handler(event, context):
+
+  cropped_images_s3_keys = event['cropped_images_s3_keys']
+  cropped_images_timestamps = event['cropped_images_timestamps']
+  s3bucket = event['s3bucket']
+
   return {
     'all_passed': True,
     # Units that did not pass inspection
@@ -13,6 +18,6 @@ def lambda_handler(event, context):
     # The time window for which this function did QA
     # For instance, if frames were from between Aug 15 00:00:00 - 00:00:15
     # That would be start_date and end_date
-    'ingested_window_start_date':datetime.datetime.today(),
-    'ingested_window_end_date':datetime.datetime.today(),
+    'ingested_window_start_date_millis':datetime.datetime.today(), # TODO to millis
+    'ingested_window_end_date_millis':datetime.datetime.today(), # TODO to millis
   }
