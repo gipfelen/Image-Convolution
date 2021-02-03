@@ -18,6 +18,7 @@ exports.handler = async (event, context, callback) => {
   const sampleTimestamp = event['sampleTimestamp']
   const loggedTimestamp = new Date()
   let msg = {
+    message: 'UNIT_VALID',
     sampleId: sampleId,
     sampleTimestamp: sampleTimestamp,
     loggedTimestamp: loggedTimestamp,
