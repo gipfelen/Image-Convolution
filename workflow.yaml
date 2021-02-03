@@ -9,6 +9,9 @@ workflowBody:
     loopCounter: {}
     loopBody:
     - function:
+        name: "preprocess-imgs"
+        type: "String"
+    - function:
         name: "ir-delta"
         type: "String"
     - if:
@@ -16,23 +19,15 @@ workflowBody:
         condition: {}
         then:
         - function:
-            name: "preprocess-imgs"
+            name: "log-valid"
+            type: "String"
+        else:
+        - function:
+            name: "ir-convolute-reduce"
             type: "String"
         - function:
-            name: "ir-inference"
+            name: "log-invalid"
             type: "String"
-        - if:
-            name: "IfThenElse0"
-            condition: {}
-            then:
-            - function:
-                name: "log-valid"
-                type: "String"
-            else:
-            - function:
-                name: "log-invalid"
-                type: "String"
-        else: []
 - function:
     name: "ir-reduce"
     type: "String"
