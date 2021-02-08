@@ -4,23 +4,44 @@ workflowBody:
 - function:
     name: "ir-split"
     type: "String"
+    dataOuts:
+    - name: "batches"
+      type: "collection"
+    - name: "num_splits"
+      type: "number"
+    properties:
+    - name: "resource"
+      value: "arn:aws:lambda:us-east-2:735406098573:function:ir-split"
 - parallelFor:
     name: "ParallelFor"
-    loopCounter: {}
+    dataIns:
+    - name: "images_s3_keys"
+      type: "collection"
+      source: "ir-split/batches"
+      constraints:
+      - name: "distribution"
+        value: "BLOCK(1)"
+    loopCounter:
+      type: "number"
+      from: "0"
+      to: "ir-split/num_splits"
+      step: "1"
     loopBody:
     - function:
         name: "preprocess-imgs"
         type: "String"
         dataIns:
-        - name: "s3bucket"
-          type: "string"
-          source: "ParallelFor/s3bucket"
         - name: "images_s3_keys"
           type: "collection"
           source: "ParallelFor/images_s3_keys"
         dataOuts:
         - name: "cropped_images_s3_keys"
           type: "collection"
+        - name: "cropped_images_timestamps"
+          type: "collection"
+        properties:
+        - name: "resource"
+          value: "arn:aws:lambda:us-east-2:735406098573:function:preprocess-imgs"
     - function:
         name: "ir-delta"
         type: "String"
@@ -30,10 +51,7 @@ workflowBody:
           source: "preprocess-imgs/cropped_images_s3_keys"
         - name: "cropped_images_timestamps"
           type: "collection"
-          source: "ParallelFor/cropped_images_timestamps"
-        - name: "s3bucket"
-          type: "string"
-          source: "ParallelFor/s3bucket"
+          source: "preprocess-imgs/cropped_images_timestamps"
         dataOuts:
         - name: "all_passed"
           type: "bool"
@@ -43,49 +61,49 @@ workflowBody:
           type: "collection"
         - name: "ingested_frame_keys"
           type: "collection"
-        - name: "ingested_window_start_date_millis"
-          type: "number"
-        - name: "ingested_window_end_date_millis"
-          type: "number"
-    - if:
-        name: "IfThenElse"
-        condition: {}
-        then:
-        - function:
-            name: "log-valid"
-            type: "String"
-        else:
-        - function:
-            name: "ir-convolute-reduce"
-            type: "String"
-            dataIns:
-            - name: "invalid_units_frame_keys"
-              type: "collection"
-              source: "ir-delta/invalid_units_frame_keys"
-            - name: "invalid_units_timestamps"
-              type: "collection"
-              source: "ir-delta/invalid_units_timestamps"
-            dataOuts:
-            - name: "invalid_units_frame_keys"
-              type: "collection"
-            - name: "invalid_units_timestamps"
-              type: "collection"
-            - name: "invalid_units_deviations"
-              type: "collection"
-        - function:
-            name: "log-invalid"
-            type: "String"
+        - name: "ingested_frame_timestamps"
+          type: "collection"
+        properties:
+        - name: "resource"
+          value: "arn:aws:lambda:us-east-2:735406098573:function:ir-delta"
+    - function:
+        name: "log-valid"
+        type: "String"
+        properties:
+        - name: "resource"
+          value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-valid"
 - function:
     name: "ir-reduce"
     type: "String"
+    dataOuts:
+    - name: "average_deviation"
+      type: "number"
+    properties:
+    - name: "resource"
+      value: "arn:aws:lambda:us-east-2:735406098573:function:ir-reduce"
 - if:
     name: "IfThenElse1"
-    condition: {}
+    dataIns:
+    - name: "average_deviation"
+      type: "number"
+      source: "ir-reduce/average_deviation"
+    condition:
+      combinedWith: "and"
+      conditions:
+      - data1: "IfThenElse1/average_deviation"
+        data2: "0.1"
+        operator: ">"
     then:
     - function:
         name: "log-valid-batch"
         type: "String"
+        properties:
+        - name: "resource"
+          value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-batch-valid"
     else:
     - function:
         name: "log-invalid-batch"
         type: "String"
+        properties:
+        - name: "resource"
+          value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-batch-invalid"
