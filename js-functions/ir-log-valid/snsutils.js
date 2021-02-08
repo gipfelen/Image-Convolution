@@ -4,7 +4,7 @@ const AWS = require('aws-sdk')
  * @param {string} message 
  * @param {string} topic 
  */
-function pub(message, topicArn, region) {
+async function pub(message, topicArn, region) {
   const sns = new AWS.SNS({
     region
   })
