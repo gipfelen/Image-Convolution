@@ -1,38 +1,28 @@
 const { pub } = require('./snsutils')
 
-/**
- * 
- * @param {{
- * sampleId: string,
- * topicArn: string,
- * region: string,
- * trace?: string,
- * sampleTimestamp: Date
- * }} event 
- * @param {*} context 
- * @param {*} callback 
- */
+
 exports.handler = async (event, context, callback) => {
-  const sampleId = event['sampleId']
-  const topicArn = event['topicArn']
-  const region = event['region']
-  const trace = event['trace']
-  const sampleTimestamp = event['sampleTimestamp']
-  const loggedTimestamp = new Date()
-  let msg = {
-    message: "UNIT_INVALID",
-    sampleId: sampleId,
-    sampleTimestamp: sampleTimestamp,
-    loggedTimestamp: loggedTimestamp,
-    passed: false,
-    trace: trace
-  }
-  msg = JSON.stringify(msg)
-  // Ensure reporting succeeds as it's crucial here
-  try {
-    await pub(msg, topicArn, region)
-    console.log("sent " + msg + " to SNS queue " + topicArn + " " + region)
-  } catch(e) {
-    console.error("Unit did not pass but could not report to Queue.", "Message: " + msg, "Logging Error: " + e)
-  }
+  // const allPassed = event['allPassed']
+  // const ingested_frame_keys = event['ingested_frame_keys']
+  // const ingested_frame_timestamps = event['ingested_frame_timestamps']
+  // const invalid_units_timestamps = event['invalid_units_timestamps']
+  // const invalid_units_frame_keys = event['invalid_units_frame_keys']
+  
+  // const topicArn = event['topicArn']
+  // const region = event['region']
+  // const logged_timestamp = new Date()
+  // let msg = {
+  //   allPassed: allPassed,
+  //   ingested_frame_keys: ingested_frame_keys,
+  //   ingested_frame_timestamps: ingested_frame_timestamps,
+  //   logged_timestamp: logged_timestamp
+  // }
+
+  // msg = JSON.stringify(msg)
+  // try {
+  //   await pub(msg, topicArn, region)
+  //   console.log("sent " + msg + " to SNS queue " + topicArn + " " + region)
+  // } catch(e) {
+  //   console.error("Unit did not pass but could not report to Queue.", "Message: " + msg, "Logging Error: " + e)
+  // }
 }

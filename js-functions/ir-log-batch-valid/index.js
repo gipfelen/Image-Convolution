@@ -13,21 +13,21 @@ const { pub } = require('./snsutils')
  * @param {*} callback 
  */
 exports.handler = async (event, context, callback) => {
-  const batchId = event['batchId']
-  const topicArn = event['topicArn']
-  const region = event['region']
-  const sampleIds = event['sampleIds']
-  const sampleTimestamps = event['sampleTimestamps']
-  const loggedTimestamp = new Date()
-  let msg = {
-    message: 'BATCH_VALID',
-    batchId,
-    sampleIds,
-    sampleTimestamps,
-    loggedTimestamp,
-    passed: true
-  }
-  msg = JSON.stringify(msg)
-  // save cloudwatch space
-  await pub(msg, topicArn, region)
+  // const batch_id = event['batch_id']
+  // const average_deviation = event['average_deviation']
+
+  // const topicArn = event['topicArn']
+  // const region = event['region']
+  // const logged_timestamp = new Date()
+  // let msg = {
+  //   batch_id,
+  //   average_deviation,
+  //   logged_timestamp,
+  //   passed: true,
+  // }
+
+  // msg = JSON.stringify(msg)
+  // await pub(msg, topicArn, region)
+  // console.log("sent " + msg + " to SNS queue " + topicArn + " " + region)
+  return {}
 }
