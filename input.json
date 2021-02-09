@@ -2,5 +2,6 @@
   "s3bucket": "YOUR_BUCKET",
   "s3prefix": "YOUR/PREFIX",
   "topic_arn": "YOUR_TOPIC",
+  "region": "us-east-2",
   "desired_num_splits": 1
 }
