@@ -1,15 +1,18 @@
-# This function takes in images of units that did not pass inspection,
-# and estimates how faulty or impure they are using sharpening kernel convolution and then reduction
+import datetime 
 
-# Generous with data flow 
-# since it may not be possible to compute a valid deviation for every frame
-def lambda_handler(event, context):    
-  invalid_units_frame_keys = event['invalid_units_frame_keys'],
-  invalid_units_timestamps = event['invalid_units_timestamps']
+def lambda_handler(event, context):
 
-  # check each
+  cropped_images_s3_keys = event['cropped_images_s3_keys']
+  cropped_images_timestamps = event['cropped_images_timestamps']
+  s3bucket = event['s3bucket']
+
   return {
-    'invalid_units_frame_keys': invalid_units_frame_keys,
-    'invalid_units_timestamps': invalid_units_timestamps,
-    'invalid_units_deviation': [0.3, 0.4, 0.5]
+    'all_passed': True,
+    # Frames in which a defect is observable
+    'invalid_units_frame_keys': [],
+    # When those units were produced
+    'invalid_units_timestamps': [],
+    # Object storage keys of the frames ingested
+    'ingested_frame_keys': cropped_images_s3_keys,
+    'ingested_frame_timestamps': cropped_images_timestamps,
   }

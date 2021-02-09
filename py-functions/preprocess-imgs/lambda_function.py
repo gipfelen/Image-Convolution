@@ -7,7 +7,7 @@ W = 225
 def lambda_handler(event, context): 
 #  s3bucket = event['s3bucket']
   imgss3keys = event['images_s3_keys']
-
+  s3bucket = event['s3bucket']
   # # Each image
   # client = boto3.client('s3')
   # croppedimgss3keys = []
@@ -68,5 +68,5 @@ def lambda_handler(event, context):
 
   return {
     'cropped_images_s3_keys': imgss3keys,
-    'cropped_images_timestamps': [16000000]
+    'cropped_images_timestamps': [16000000],
   }

@@ -3,6 +3,11 @@
 # from moviepy.editor import VideoFileClip
 
 def lambda_handler(event, context):
+
+  s3bucket = event['s3bucket']
+  desired_num_splits = event['desired_num_splits']
+  s3prefix = event['s3prefix']
+  
   # numSplits = event['numSplits']
   # s3bucket = event['s3bucket']
   # videos3key = event['videos3key']
