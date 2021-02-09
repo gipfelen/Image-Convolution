@@ -81,6 +81,8 @@ workflowBody:
           type: "collection"
         - name: "topic_arn"
           type: "string"
+        - name: "s3bucket"
+          type: "string"
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:preprocess-imgs"
@@ -116,22 +118,32 @@ workflowBody:
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:ir-delta"
-    - function:
-        name: "log-valid"
-        type: "String"
+    - if:
+        name: "IfThenElse"
         dataIns:
-        - name: "ingested_frame_keys"
-          type: "collection"
-          source: "ir-delta/ingested_frame_keys"
-        - name: "ingested_frame_timestamps"
-          type: "collection"
-          source: "ir-delta/ingested_frame_timestamps"
-        - name: "topic_arn"
-          type: "string"
-          source: "ir-delta/topic_arn"
-        properties:
-        - name: "resource"
-          value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-valid"
+        - name: "all_passed"
+          type: "bool"
+          source: "ir-delta/all_passed"
+        condition:
+          combinedWith: "and"
+          conditions:
+          - data1: "IfThenElse/all_passed"
+            data2: "True"
+            operator: "="
+        then:
+        - function:
+            name: "log-valid"
+            type: "String"
+            properties:
+            - name: "resource"
+              value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-valid"
+        else:
+        - function:
+            name: "log-invalid"
+            type: "String"
+            properties:
+            - name: "resource"
+              value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-invalid"
     dataOuts:
     - name: "invalid_units_frame_keys_batches"
       type: "collection"
