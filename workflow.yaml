@@ -13,6 +13,9 @@ dataIns:
 - name: "s3prefix"
   type: "string"
   source: "s3prefix"
+- name: "region"
+  type: "string"
+  source: "region"
 workflowBody:
 - function:
     name: "ir-split"
@@ -56,6 +59,9 @@ workflowBody:
       constraints:
       - name: "distribution"
         value: "REPLICATE(*)"
+    - name: "region"
+      type: "string"
+      source: "IMGREC/region"
     loopCounter:
       type: "number"
       to: "ir-split/num_splits"
@@ -71,18 +77,11 @@ workflowBody:
         - name: "s3bucket"
           type: "string"
           source: "ParallelFor/s3bucket"
-        - name: "topic_arn"
-          type: "string"
-          source: "ParallelFor/topic_arn"
         dataOuts:
         - name: "cropped_images_s3_keys"
           type: "collection"
         - name: "cropped_images_timestamps"
           type: "collection"
-        - name: "topic_arn"
-          type: "string"
-        - name: "s3bucket"
-          type: "string"
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:preprocess-imgs"
@@ -98,10 +97,7 @@ workflowBody:
           source: "preprocess-imgs/cropped_images_timestamps"
         - name: "s3bucket"
           type: "string"
-          source: "preprocess-imgs/s3bucket"
-        - name: "topic_arn"
-          type: "string"
-          source: "preprocess-imgs/topic_arn"
+          source: "ParallelFor/s3bucket"
         dataOuts:
         - name: "all_passed"
           type: "bool"
@@ -113,14 +109,34 @@ workflowBody:
           type: "collection"
         - name: "ingested_frame_timestamps"
           type: "collection"
-        - name: "topic_arn"
-          type: "string"
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:ir-convolute-reduce"
     - function:
         name: "ir-log-unit"
         type: "String"
+        dataIns:
+        - name: "all_passed"
+          type: "bool"
+          source: "ir-convolute-reduce/all_passed"
+        - name: "invalid_units_frame_keys"
+          type: "collection"
+          source: "ir-convolute-reduce/invalid_units_frame_keys"
+        - name: "invalid_units_timestamps"
+          type: "collection"
+          source: "ir-convolute-reduce/invalid_units_timestamps"
+        - name: "ingested_frame_keys"
+          type: "collection"
+          source: "ir-convolute-reduce/ingested_frame_keys"
+        - name: "ingested_frame_timestamps"
+          type: "collection"
+          source: "ir-convolute-reduce/ingested_frame_timestamps"
+        - name: "topic_arn"
+          type: "string"
+          source: "ParallelFor/topic_arn"
+        - name: "region"
+          type: "string"
+          source: "ParallelFor/region"
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-unit"
@@ -175,7 +191,7 @@ workflowBody:
       combinedWith: "and"
       conditions:
       - data1: "IfThenElse1/average_deviation"
-        data2: "0"
+        data2: "1"
         operator: "<"
     then:
     - function:
@@ -185,6 +201,12 @@ workflowBody:
         - name: "average_deviation"
           type: "collection"
           source: "IfThenElse1/average_deviation"
+        - name: "topic_arn"
+          type: "string"
+          source: "IMGREC/topic_arn"
+        - name: "region"
+          type: "string"
+          source: "IMGREC/region"
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-batch-valid"
@@ -202,6 +224,12 @@ workflowBody:
         - name: "invalid_units_frame_timestamps_batches"
           type: "collection"
           source: "IfThenElse1/invalid_units_frame_timestamps_batches"
+        - name: "topic_arn"
+          type: "string"
+          source: "IMGREC/topic_arn"
+        - name: "region"
+          type: "string"
+          source: "IMGREC/region"
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-batch-invalid"
