@@ -1,5 +1,6 @@
 {
   "s3bucket": "YOUR_BUCKET",
+  "s3prefix": "YOUR/PREFIX",
   "topic_arn": "YOUR_TOPIC",
   "desired_num_splits": 1
 }
