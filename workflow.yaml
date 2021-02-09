@@ -10,10 +10,23 @@ dataIns:
 - name: "desired_num_splits"
   type: "number"
   source: "desired_num_splits"
+- name: "s3prefix"
+  type: "string"
+  source: "s3prefix"
 workflowBody:
 - function:
     name: "ir-split"
     type: "String"
+    dataIns:
+    - name: "s3bucket"
+      type: "string"
+      source: "IMGREC/s3bucket"
+    - name: "desired_num_splits"
+      type: "number"
+      source: "IMGREC/desired_num_splits"
+    - name: "s3prefix"
+      type: "string"
+      source: "IMGREC/s3prefix"
     dataOuts:
     - name: "batches"
       type: "collection"
@@ -31,9 +44,20 @@ workflowBody:
       constraints:
       - name: "distribution"
         value: "BLOCK(1)"
+    - name: "s3bucket"
+      type: "string"
+      source: "IMGREC/s3bucket"
+      constraints:
+      - name: "distribution"
+        value: "REPLICATE(*)"
+    - name: "topic_arn"
+      type: "string"
+      source: "IMGREC/topic_arn"
+      constraints:
+      - name: "distribution"
+        value: "REPLICATE(*)"
     loopCounter:
       type: "number"
-      from: "0"
       to: "ir-split/num_splits"
       step: "1"
     loopBody:
@@ -44,11 +68,19 @@ workflowBody:
         - name: "images_s3_keys"
           type: "collection"
           source: "ParallelFor/images_s3_keys"
+        - name: "s3bucket"
+          type: "string"
+          source: "ParallelFor/s3bucket"
+        - name: "topic_arn"
+          type: "string"
+          source: "ParallelFor/topic_arn"
         dataOuts:
         - name: "cropped_images_s3_keys"
           type: "collection"
         - name: "cropped_images_timestamps"
           type: "collection"
+        - name: "topic_arn"
+          type: "string"
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:preprocess-imgs"
@@ -62,6 +94,12 @@ workflowBody:
         - name: "cropped_images_timestamps"
           type: "collection"
           source: "preprocess-imgs/cropped_images_timestamps"
+        - name: "s3bucket"
+          type: "string"
+          source: "preprocess-imgs/s3bucket"
+        - name: "topic_arn"
+          type: "string"
+          source: "preprocess-imgs/topic_arn"
         dataOuts:
         - name: "all_passed"
           type: "bool"
@@ -73,6 +111,8 @@ workflowBody:
           type: "collection"
         - name: "ingested_frame_timestamps"
           type: "collection"
+        - name: "topic_arn"
+          type: "string"
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:ir-delta"
@@ -86,6 +126,9 @@ workflowBody:
         - name: "ingested_frame_timestamps"
           type: "collection"
           source: "ir-delta/ingested_frame_timestamps"
+        - name: "topic_arn"
+          type: "string"
+          source: "ir-delta/topic_arn"
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-valid"
@@ -96,6 +139,12 @@ workflowBody:
     - name: "invalid_units_frame_timestamps_batches"
       type: "collection"
       source: "ir-delta/invalid_units_timestamps"
+    - name: "ingested_frame_keys_batches"
+      type: "collection"
+      source: "ir-delta/ingested_frame_keys"
+    - name: "ingested_frame_timestamps_batches"
+      type: "collection"
+      source: "ir-delta/ingested_frame_timestamps"
 - function:
     name: "ir-reduce"
     type: "String"
@@ -106,6 +155,12 @@ workflowBody:
     - name: "invalid_units_frame_timestamps_batches"
       type: "collection"
       source: "ParallelFor/invalid_units_frame_timestamps_batches"
+    - name: "ingested_frame_keys_batches"
+      type: "collection"
+      source: "ParallelFor/ingested_frame_keys_batches"
+    - name: "ingested_frame_timestamps_batches"
+      type: "collection"
+      source: "ParallelFor/ingested_frame_timestamps_batches"
     dataOuts:
     - name: "average_deviation"
       type: "number"
@@ -118,11 +173,17 @@ workflowBody:
     - name: "average_deviation"
       type: "number"
       source: "ir-reduce/average_deviation"
+    - name: "invalid_units_frame_keys_batches"
+      type: "collection"
+      source: "ParallelFor/invalid_units_frame_keys_batches"
+    - name: "invalid_units_frame_timestamps_batches"
+      type: "collection"
+      source: "ParallelFor/invalid_units_frame_timestamps_batches"
     condition:
       combinedWith: "and"
       conditions:
       - data1: "IfThenElse1/average_deviation"
-        data2: "1"
+        data2: "0"
         operator: "<"
     then:
     - function:
@@ -143,6 +204,16 @@ workflowBody:
         - name: "average_deviation"
           type: "number"
           source: "IfThenElse1/average_deviation"
+        - name: "invalid_units_frame_keys_batches"
+          type: "collection"
+          source: "IfThenElse1/invalid_units_frame_keys_batches"
+        - name: "invalid_units_frame_timestamps_batches"
+          type: "collection"
+          source: "IfThenElse1/invalid_units_frame_timestamps_batches"
         properties:
         - name: "resource"
           value: "arn:aws:lambda:us-east-2:735406098573:function:ir-log-batch-invalid"
+dataOuts:
+- name: "average_deviation"
+  type: "number"
+  source: "ir-reduce/average_deviation"
