@@ -2,32 +2,21 @@ const { pub } = require('./snsutils')
 
 /**
  * 
- * @param {{
- * batchId: string,
- * topicArn: string,
- * region: string,
- * sampleIds: string[]
- * sampleTimestamps: Date[]
- * }} event 
+ * @param {{ average_deviation: number, topic_arn: string, region: string }} param0 
  * @param {*} context 
  * @param {*} callback 
  */
-exports.handler = async (event, context, callback) => {
-  // const batch_id = event['batch_id']
-  // const average_deviation = event['average_deviation']
+exports.handler = async ({ average_deviation, topic_arn, region }, context, callback) => {
+  
+  const logged_timestamp = new Date()
+  let msg = {
+    average_deviation,
+    logged_timestamp,
+    batch_passed: true,
+  }
 
-  // const topicArn = event['topicArn']
-  // const region = event['region']
-  // const logged_timestamp = new Date()
-  // let msg = {
-  //   batch_id,
-  //   average_deviation,
-  //   logged_timestamp,
-  //   passed: true,
-  // }
-
-  // msg = JSON.stringify(msg)
-  // await pub(msg, topicArn, region)
-  // console.log("sent " + msg + " to SNS queue " + topicArn + " " + region)
+  msg = JSON.stringify(msg)
+  await pub(msg, topic_arn, region)
+  console.log("sent " + msg + " to SNS queue " + topic_arn + " " + region)
   return {}
 }
