@@ -3,5 +3,5 @@
   "s3prefix": "YOUR/PREFIX",
   "topic_arn": "YOUR_TOPIC",
   "region": "us-east-2",
-  "desired_num_splits": 1
+  "desired_num_splits": 2
 }
