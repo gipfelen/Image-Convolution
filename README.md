@@ -26,7 +26,8 @@ cd Image-Recognition
 
 number of images | comment | link 
 ----|---- | -----
-200 | `52.png`, `55.png`, and `184.png` should be detected by QA as polluted |  [datasets/200](https://github.com/Apollo-Workflows/Image-Recognition/tree/master/datasets/200)
+200 | `52.png`, `55.png`, and `184.png` should be detected as polluted |  [datasets/200](https://github.com/Apollo-Workflows/Image-Recognition/tree/master/datasets/200)
+400 | `98.png` and `121.png` should be detected as polluted |  [datasets/400](https://github.com/Apollo-Workflows/Image-Recognition/tree/master/datasets/400)
 
 
 Then, update `input.json` with the desired parallelism. The default is 2. This yields a 100 images per 1 convolution function ratio for the dataset.
