@@ -23,8 +23,8 @@ exports.handler = async (event, context, callback) => {
 
   msg = JSON.stringify(msg)
   try {
-    await pub(msg, topicArn, region)
-    console.log("sent " + msg + " to SNS queue " + topicArn + " " + region)
+    await pub(msg, topic_arn, region)
+    console.log("sent " + msg + " to SNS queue " + topic_arn + " " + region)
   } catch(e) {
     console.error("Unit did not pass but could not report to Queue.", "Message: " + msg, "Logging Error: " + e)
     throw e

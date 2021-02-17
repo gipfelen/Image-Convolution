@@ -6,7 +6,7 @@ const { pub } = require('./snsutils')
   * allPassed: boolean,
   * ingested_frame_keys: string[],
   * ingested_frame_timestamps: number[],
-  * topicArn: string,
+  * topic_arn: string,
   * region: string,
   * logged_timestamp: string
   * }} event 
@@ -26,11 +26,10 @@ const { pub } = require('./snsutils')
 //  'ingested_frame_timestamps': cropped_images_timestamps
 
 exports.handler = async (event, context, callback) => {
-  // const allPassed = event['all_passed']
   // const ingested_frame_keys = event['ingested_frame_keys']
   // const ingested_frame_timestamps = event['ingested_frame_timestamps']
 
-  // const topicArn = event['topicArn']
+  // const topic_arn = event['topic_arn']
   // const region = event['region']
   // const logged_timestamp = new Date()
   // let msg = {
@@ -41,7 +40,7 @@ exports.handler = async (event, context, callback) => {
   // }
 
   // msg = JSON.stringify(msg)
-  // await pub(msg, topicArn, region)
-  // console.log("sent " + msg + " to SNS queue " + topicArn + " " + region)
+  // await pub(msg, topic_arn, region)
+  // console.log("sent " + msg + " to SNS queue " + topic_arn + " " + region)
   return { }
 }

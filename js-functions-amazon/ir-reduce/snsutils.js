@@ -4,13 +4,13 @@ const AWS = require('aws-sdk')
  * @param {string} message 
  * @param {string} topic 
  */
-async function pub(message, topicArn, region) {
+async function pub(message, topic_arn, region) {
   const sns = new AWS.SNS({
     region
   })
   const params = {
     Message: message,
-    TopicArn: topicArn
+    topic_arn: topic_arn
   }
   const res = await sns.publish(params).promise()
 

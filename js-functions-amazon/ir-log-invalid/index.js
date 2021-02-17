@@ -8,7 +8,7 @@ exports.handler = async (event, context, callback) => {
   // const invalid_units_timestamps = event['invalid_units_timestamps']
   // const invalid_units_frame_keys = event['invalid_units_frame_keys']
   
-  // const topicArn = event['topicArn']
+  // const topic_arn = event['topic_arn']
   // const region = event['region']
   // const logged_timestamp = new Date()
   // let msg = {
@@ -20,8 +20,8 @@ exports.handler = async (event, context, callback) => {
 
   // msg = JSON.stringify(msg)
   // try {
-  //   await pub(msg, topicArn, region)
-  //   console.log("sent " + msg + " to SNS queue " + topicArn + " " + region)
+  //   await pub(msg, topic_arn, region)
+  //   console.log("sent " + msg + " to SNS queue " + topic_arn + " " + region)
   // } catch(e) {
   //   console.error("Unit did not pass but could not report to Queue.", "Message: " + msg, "Logging Error: " + e)
   // }
