@@ -33,7 +33,7 @@ number of images | comment | link
 
 
 
-Then, update `input.json` with the desired parallelism. The default is 2. This yields a 100 images per 1 convolution function ratio for the dataset.
+Then, update `input.json` with the desired parallelism. The default is 2. This yields a 100 images per 1 convolution function ratio for the [200](https://github.com/Apollo-Workflows/Image-Recognition/tree/master/datasets/200) dataset.
 
 
 ```
@@ -48,9 +48,9 @@ Then, update `input.json` with the desired parallelism. The default is 2. This y
 
 #### Deploy the serverless functions
 
-The serverless functions are in `js-functions-amazon`, `js-functions-google` and `py-functions-amazon` and `py-functions-google`. You can deploy a mix of them to Amazon and Google, but deploy all functions from `js` and `py`.
+The serverless functions are in `js-functions-amazon`, `js-functions-google` and `py-functions-amazon` and `py-functions-google`. You can deploy a mix of them to Amazon and Google, but deploy every functions from `js` and `py` at least once.
 
-Take note that you properly deploy the functions, as is practice (Python: `requirements.txt`, JavaScript: `package.json`).
+Take note that you properly deploy the functions, including dependencies as is practice (Python: `requirements.txt`, JavaScript: `package.json`).
 
 #### Run the workflow
 
