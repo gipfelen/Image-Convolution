@@ -1,4 +1,4 @@
-# Image Recognition
+# Image Convolution
 
 This workflow performs industrial optical QA on a large set of input images.
 
