@@ -1,5 +1,6 @@
 import cv2 
-import boto3 
+import boto3
+import json
 
 # The center 410 x 410 px of each frame should be inspected
 # This cuts out bezels, or elements of industrial holding trays at the edge
@@ -8,8 +9,9 @@ H = 410
 W = 410
 
 def lambda_handler(event, context): 
-  imgss3keys = event['images_s3_keys']
-  s3bucket = event['s3bucket']
+  json_input = json.loads(event['body'])
+  imgss3keys = json_input['images_s3_keys']
+  s3bucket = json_input['s3bucket']
   # # Each image
   client = boto3.client('s3')
   croppedimgss3keys = []
@@ -68,8 +70,13 @@ def lambda_handler(event, context):
 
     croppedimgss3keys.append(croppedfkey)
 
-  return {
-    'cropped_images_s3_keys': imgss3keys,
+  res = {
+    'cropped_images_s3_keys': croppedimgss3keys,
     'cropped_images_timestamps': [16000000],
   }
+
+  return {
+        'statusCode': 200,
+        'body': json.dumps(res)
+    }
 

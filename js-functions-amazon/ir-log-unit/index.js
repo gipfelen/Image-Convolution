@@ -14,7 +14,7 @@ exports.handler = async (event, context, callback) => {
 
   let msg = {
     all_passed,
-    logged_timestamp
+    logged_timestamp,
     invalid_units_frame_keys,
     invalid_units_timestamps,
     ingested_frame_keys,

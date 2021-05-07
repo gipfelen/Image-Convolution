@@ -19,7 +19,7 @@ dataIns:
 workflowBody:
 - function:
     name: "ir-split"
-    type: "String"
+    type: "ir-split"
     dataIns:
     - name: "s3bucket"
       type: "string"
@@ -54,7 +54,7 @@ workflowBody:
     loopBody:
     - function:
         name: "preprocess-imgs"
-        type: "String"
+        type: "preprocess-imgs"
         dataIns:
         - name: "images_s3_keys"
           type: "collection"
@@ -72,7 +72,7 @@ workflowBody:
           value: "arn:aws:lambda:us-east-2:735406098573:function:preprocess-imgs"
     - function:
         name: "ir-convolute-reduce"
-        type: "String"
+        type: "ir-convolute-reduce"
         dataIns:
         - name: "cropped_images_s3_keys"
           type: "collection"
@@ -108,7 +108,7 @@ workflowBody:
         then:
         - function:
             name: "ir-log-valid"
-            type: "aType"
+            type: "ir-log-valid"
             dataIns:
             - name: "ingested_frame_keys"
               type: "collection"
@@ -125,7 +125,7 @@ workflowBody:
         else:
         - function:
             name: "ir-log-invalid"
-            type: "aType"
+            type: "ir-log-invalid"
             dataIns:
             - name: "ingested_frame_keys"
               type: "collection"
@@ -160,7 +160,7 @@ workflowBody:
       source: "ir-convolute-reduce/ingested_frame_timestamps"
 - function:
     name: "ir-reduce"
-    type: "String"
+    type: "ir-reduce"
     dataIns:
     - name: "invalid_units_frame_keys_batches"
       type: "collection"
@@ -195,7 +195,7 @@ workflowBody:
     then:
     - function:
         name: "log-valid-batch"
-        type: "String"
+        type: "log-valid-batch"
         dataIns:
         - name: "average_deviation"
           type: "collection"
@@ -212,7 +212,7 @@ workflowBody:
     else:
     - function:
         name: "log-invalid-batch"
-        type: "String"
+        type: "log-invalid-batch"
         dataIns:
         - name: "average_deviation"
           type: "number"

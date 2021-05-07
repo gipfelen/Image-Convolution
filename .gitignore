@@ -3,3 +3,10 @@ credentials.properties
 deploy.json
 env
 node_modules
+aws/.terraform
+aws/.terraform.lock.hcl
+aws/terraform.tfstate
+aws/terraform.tfstate.backup
+aws/credentials
+js-functions-amazon/ir-split.zip
+py-functions-amazon/preprocess-imgs.zip
