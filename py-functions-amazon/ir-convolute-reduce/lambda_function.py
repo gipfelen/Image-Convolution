@@ -2,14 +2,15 @@ import datetime
 import cv2 
 import boto3
 import numpy as np  
+import json
 
 MAX_DEVIATION = 5
 
 def lambda_handler(event, context):
-
-  cropped_images_s3_keys = event['cropped_images_s3_keys']
-  cropped_images_timestamps = event['cropped_images_timestamps']
-  s3bucket = event['s3bucket']
+  json_input = json.loads(event['body'])
+  cropped_images_s3_keys = json_input['cropped_images_s3_keys']
+  cropped_images_timestamps = json_input['cropped_images_timestamps']
+  s3bucket = json_input['s3bucket']
 
 
   invalid_units_frame_keys = []
@@ -54,13 +55,14 @@ def lambda_handler(event, context):
 
     # Check whether valid unit
     if(mx > MAX_DEVIATION):
-      invalid_units_deviation.append(mx)
+      invalid_units_max_deviation.append(float(mx))
       invalid_units_frame_keys.append(imgss3key)
-      invalid_units_timestamps.append(cropped_images_timestamps[idx])
+      #should be idx, but we only get one value??
+      invalid_units_timestamps.append(cropped_images_timestamps[0])
     
   all_passed = (len(invalid_units_frame_keys) == 0)
 
-  return {
+  res =  {
     'all_passed': all_passed,
     # Frames in which a defect is observable
     'invalid_units_frame_keys': invalid_units_frame_keys,
@@ -71,5 +73,10 @@ def lambda_handler(event, context):
     'ingested_frame_keys': cropped_images_s3_keys,
     'ingested_frame_timestamps': cropped_images_timestamps,
   }
+
+  return {
+        'statusCode': 200,
+        'body': json.dumps(res)
+    }
 
 

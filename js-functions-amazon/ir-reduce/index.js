@@ -1,12 +1,19 @@
-exports.handler = async (event, context, callback) => {
-  const invalid_units_frame_keys_batches = event['invalid_units_frame_keys_batches'] || []
-  const invalid_units_frame_timestamps_batches = event['invalid_units_frame_timestamps_batches'] || []
-  const ingested_frame_keys_batches = event['ingested_frame_keys_batches'] || []
-  const ingested_frame_timestamps_batches = event['ingested_frame_timestamps_batches'] || []
+exports.handler = async (event) => {
+  const body = JSON.parse(event.body);
+
+  const invalid_units_frame_keys_batches = body['invalid_units_frame_keys_batches'] || []
+  //const invalid_units_frame_timestamps_batches = body['invalid_units_frame_timestamps_batches'] || []
+  const ingested_frame_keys_batches = body['ingested_frame_keys_batches'] || []
+  //const ingested_frame_timestamps_batches = body['ingested_frame_timestamps_batches'] || []
 
   const averageDeviation = invalid_units_frame_keys_batches.length / ingested_frame_keys_batches.length 
   
-  return {
-    'average_deviation': averageDeviation
-  }
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify({
+      average_deviation: averageDeviation
+    }),
+  };
+
+  return response;
 }

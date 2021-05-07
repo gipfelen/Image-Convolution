@@ -124,11 +124,11 @@ resource "aws_s3_bucket_object" "dataset200" {
 ############################################
 
 locals {
-  function_names = ["ir-split","preprocess-imgs"]
-  function_paths = ["../js-functions-amazon/ir-split.zip","../py-functions-amazon/preprocess-imgs.zip"]
-  function_runtimes = ["nodejs14.x","python3.8"]
-  function_handlers = ["index.handler","lambda_function.lambda_handler"]
-  function_layers = [[],[aws_lambda_layer_version.cv2_layer.arn, "arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python38-SciPy1x:29"]]
+  function_names = ["ir-split","preprocess-imgs","ir-convolute-reduce","ir-reduce"]
+  function_paths = ["../js-functions-amazon/ir-split.zip","../py-functions-amazon/preprocess-imgs.zip","../py-functions-amazon/ir-convolute-reduce.zip","../js-functions-amazon/ir-reduce.zip"]
+  function_runtimes = ["nodejs14.x","python3.8","python3.8","nodejs14.x"]
+  function_handlers = ["index.handler","lambda_function.lambda_handler","lambda_function.lambda_handler","index.handler"]
+  function_layers = [[],[aws_lambda_layer_version.cv2_layer.arn, "arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python38-SciPy1x:29"],[aws_lambda_layer_version.cv2_layer.arn, "arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python38-SciPy1x:29"],[]]
 }
 
 resource "aws_lambda_function" "lambda" {
@@ -138,8 +138,8 @@ resource "aws_lambda_function" "lambda" {
   function_name = local.function_names[count.index]
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = local.function_handlers[count.index]
-  timeout       = 60
-  memory_size   =  128
+  timeout       = 300
+  memory_size   =  256
   layers        = local.function_layers[count.index]
   runtime       = local.function_runtimes[count.index]
   source_code_hash = filebase64sha256(local.function_paths[count.index])
@@ -228,6 +228,28 @@ resource "aws_api_gateway_deployment" "example1" {
    stage_name  = local.function_names[1]
 }
 
+resource "aws_api_gateway_deployment" "example2" {
+   depends_on = [
+     aws_api_gateway_integration.lambda[2],
+     aws_api_gateway_integration.lambda_root[2],
+   ]
+
+   rest_api_id = aws_api_gateway_rest_api.example[2].id
+   stage_name  = local.function_names[2]
+}
+
+resource "aws_api_gateway_deployment" "example3" {
+   depends_on = [
+     aws_api_gateway_integration.lambda[3],
+     aws_api_gateway_integration.lambda_root[3],
+   ]
+
+   rest_api_id = aws_api_gateway_rest_api.example[3].id
+   stage_name  = local.function_names[3]
+}
+
+
+
 resource "aws_lambda_permission" "apigw" {
    count = length(local.function_names)
 
@@ -249,4 +271,12 @@ output "url_ir-split" {
 
 output "url_preprocess-imgs" {
   value = aws_api_gateway_deployment.example1.invoke_url
+}
+
+output "url_ir-convolute-reduce" {
+  value = aws_api_gateway_deployment.example2.invoke_url
+}
+
+output "url_ir-reduce" {
+  value = aws_api_gateway_deployment.example3.invoke_url
 }
