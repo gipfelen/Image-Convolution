@@ -57,17 +57,16 @@ do
 	shift
 done
 
-rm js-functions-amazon/*.zip
-rm py-functions-amazon/*.zip
+rm lambda-functions/*.zip
 
-./build.sh ../js-functions-amazon/ir-split
-./build.sh ../py-functions-amazon/preprocess-imgs
-./build.sh ../py-functions-amazon/ir-convolute-reduce 
-./build.sh ../js-functions-amazon/ir-reduce
+
+./build.sh lambda-functions/ir-split
+./build.sh lambda-functions/preprocess-imgs
+./build.sh lambda-functions/ir-convolute-reduce 
+./build.sh lambda-functions/ir-reduce
 
 terraform init
 
 terraform apply -auto-approve -var="region=$region"
 
-rm js-functions-amazon/*.zip
-rm py-functions-amazon/*.zip
+rm lambda-functions/*.zip
