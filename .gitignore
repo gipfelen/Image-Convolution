@@ -13,3 +13,5 @@ py-functions-amazon/preprocess-imgs.zip
 aws/.terraform.tfstate.lock.info
 py-functions-amazon/ir-convolute-reduce.zip
 js-functions-amazon/ir-reduce.zip
+.DS_Store
+docker/credentials
