@@ -37,12 +37,9 @@ exports.handler = async (event) => {
 
   const numBatches = batches.length;
 
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      num_batches: numBatches,
-      batches: batches,
-    }),
-  };
-  return response;
+
+  return JSON.stringify({
+    num_batches: numBatches,
+    batches: batches,
+  });
 };

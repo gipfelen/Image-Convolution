@@ -7,13 +7,9 @@ exports.handler = async (event) => {
   //const ingested_frame_timestamps_batches = body['ingested_frame_timestamps_batches'] || []
 
   const averageDeviation = invalid_units_frame_keys_batches.length / ingested_frame_keys_batches.length 
-  
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      average_deviation: averageDeviation
-    }),
-  };
 
-  return response;
+
+  return JSON.stringify({
+    average_deviation: averageDeviation
+  });
 }

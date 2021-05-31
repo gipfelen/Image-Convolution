@@ -35,7 +35,7 @@ def lambda_handler(json_input):
     f = open(fpath, 'w+b')
     f.write(bstr)
     f.close()
-    print("fetched " + imgss3key + " to " + fpath)
+    #print("fetched " + imgss3key + " to " + fpath)
 
     # Preprocess it
 
@@ -46,7 +46,7 @@ def lambda_handler(json_input):
     ycenter = img.shape[0] / 2
     y = ycenter - (H / 2)
     crop_img = img[int(y):int(y+H), int(x):int(x+W)]
-    print("cropped image to shape ", crop_img.shape)
+    #print("cropped image to shape ", crop_img.shape)
     
     # Save cropped to file 
 
@@ -55,7 +55,7 @@ def lambda_handler(json_input):
     croppedfpath = '/tmp/' + croppedfname
     cv2.imwrite(croppedfpath, crop_img)
 
-    print("wrote cropped img to " + croppedfpath)
+   #print("wrote cropped img to " + croppedfpath)
 
     # Stash back to S3
     croppedfkey = prefix + croppedfname 
@@ -65,7 +65,7 @@ def lambda_handler(json_input):
       Key=croppedfkey,
       Body=cf 
     )
-    print("stashed cropped img to s3 as ", croppedfkey)
+    #print("stashed cropped img to s3 as ", croppedfkey)
 
     croppedimgss3keys.append(croppedfkey)
 
@@ -74,10 +74,7 @@ def lambda_handler(json_input):
     'cropped_images_timestamps': [16000000],
   }
 
-  return {
-        'statusCode': 200,
-        'body': json.dumps(res)
-    }
+  return res
 
 if __name__ == "__main__":
     import sys
@@ -89,4 +86,4 @@ if __name__ == "__main__":
 
     result = lambda_handler(j)
     # write to std out
-    print (json.dumps(result))
+    print(json.dumps(result))

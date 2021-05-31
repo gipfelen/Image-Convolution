@@ -73,10 +73,7 @@ def lambda_handler(json_input):
     'ingested_frame_timestamps': cropped_images_timestamps,
   }
 
-  return {
-        'statusCode': 200,
-        'body': json.dumps(res)
-    }
+  return res
 
 
 
@@ -91,4 +88,4 @@ if __name__ == "__main__":
 
     result = lambda_handler(j)
     # write to std out
-    print (json.dumps(result))
+    print(json.dumps(result))
