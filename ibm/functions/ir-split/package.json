@@ -1,0 +1,7 @@
+{
+  "name": "my-action",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.917.0"
+  }
+}

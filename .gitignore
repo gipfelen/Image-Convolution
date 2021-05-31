@@ -13,3 +13,11 @@ py-functions-amazon/preprocess-imgs.zip
 aws/.terraform.tfstate.lock.info
 py-functions-amazon/ir-convolute-reduce.zip
 js-functions-amazon/ir-reduce.zip
+ibm/.terraform
+ibm/.terraform.lock.hcl
+ibm/terraform.tfstate
+ibm/terraform.tfstate.backup
+ibm/functions/ir-convolute-reduce.zip
+ibm/functions/ir-reduce.zip
+ibm/functions/ir-split.zip
+ibm/functions/preprocess-imgs.zip
