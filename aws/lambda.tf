@@ -73,6 +73,14 @@ resource "aws_lambda_layer_version" "cv2_layer" {
   compatible_runtimes = ["python3.8"]
 }
 
+resource "aws_lambda_layer_version" "numpy_layer" {
+  filename   = "./layers/numpy-for-amazon-linux-env.zip"
+  layer_name = "numpy_layer"
+  
+  compatible_runtimes = ["python3.8"]
+}
+
+
 ############################################
 # Create a bucket                          #
 ############################################
@@ -128,7 +136,7 @@ locals {
   function_paths = ["lambda-functions/ir-split.zip","lambda-functions/preprocess-imgs.zip","lambda-functions/ir-convolute-reduce.zip","lambda-functions/ir-reduce.zip"]
   function_runtimes = ["nodejs14.x","python3.8","python3.8","nodejs14.x"]
   function_handlers = ["index.handler","lambda_function.lambda_handler","lambda_function.lambda_handler","index.handler"]
-  function_layers = [[],[aws_lambda_layer_version.cv2_layer.arn, "arn:aws:lambda:eu-central-1:292169987271:layer:AWSLambda-Python38-SciPy1x:29"],[aws_lambda_layer_version.cv2_layer.arn, "arn:aws:lambda:eu-central-1:292169987271:layer:AWSLambda-Python38-SciPy1x:29"],[]]
+  function_layers = [[],[aws_lambda_layer_version.cv2_layer.arn, aws_lambda_layer_version.numpy_layer.arn],[aws_lambda_layer_version.cv2_layer.arn, aws_lambda_layer_version.numpy_layer.arn],[]]
 }
 
 resource "aws_lambda_function" "lambda" {

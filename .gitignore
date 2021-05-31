@@ -21,3 +21,5 @@ ibm/functions/ir-convolute-reduce.zip
 ibm/functions/ir-reduce.zip
 ibm/functions/ir-split.zip
 ibm/functions/preprocess-imgs.zip
+ibm/s3Credentials.json
+ibm/terraform.tfvars
