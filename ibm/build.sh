@@ -21,12 +21,11 @@ if [[ $1 == "--installNode" ]] ; then
 
     cd $2
 
-    npm install
-
     mkdir -p ../tmp
     cp * ../tmp
     cd ../tmp
     npm install
+    cp ../../s3Credentials.json config.json
     zip -r ../${folderName}.zip .
     cd ..
     rm -r tmp
@@ -39,6 +38,7 @@ else
     mkdir -p ../tmp
     cp * ../tmp
     cd ../tmp
+    cp ../../s3Credentials.json config.json
     zip -r ../${folderName}.zip .
     cd ..
     rm -r tmp

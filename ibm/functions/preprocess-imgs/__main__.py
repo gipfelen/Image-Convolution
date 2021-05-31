@@ -12,8 +12,17 @@ def main(args):
   json_input = args
   imgss3keys = json_input['images_s3_keys']
   s3bucket = json_input['s3bucket']
+  
+  with open('config.json') as json_file:
+    credentials = json.load(json_file)
+
+  client = boto3.client(
+    's3',
+    aws_access_key_id=credentials['accessKeyId'],
+    aws_secret_access_key=credentials['secretAccessKey'],
+  )
+
   # # Each image
-  client = boto3.client('s3')
   croppedimgss3keys = []
   for imgss3key in imgss3keys:
 

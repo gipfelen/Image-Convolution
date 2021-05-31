@@ -17,7 +17,15 @@ def main(args):
   invalid_units_max_deviation = []
   invalid_units_timestamps = []
 
-  client = boto3.client('s3')
+  with open('config.json') as json_file:
+    credentials = json.load(json_file)
+
+  client = boto3.client(
+    's3',
+    aws_access_key_id=credentials['accessKeyId'],
+    aws_secret_access_key=credentials['secretAccessKey'],
+  )
+  
   for idx, imgss3key in enumerate(cropped_images_s3_keys):
 
     # Fetch image from S3
