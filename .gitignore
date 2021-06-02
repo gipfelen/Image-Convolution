@@ -25,3 +25,7 @@ ibm/functions/ir-split.zip
 ibm/functions/preprocess-imgs.zip
 ibm/s3Credentials.json
 ibm/terraform.tfvars
+aws/lambda-functions/preprocess-imgs.zip
+aws/lambda-functions/ir-split.zip
+aws/lambda-functions/ir-reduce.zip
+aws/lambda-functions/ir-convolute-reduce.zip
