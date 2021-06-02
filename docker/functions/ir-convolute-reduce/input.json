@@ -1,0 +1,10 @@
+{
+    "s3bucket": "apollo-bucket-image-convolution-frankfurt",
+    "cropped_images_s3_keys": [
+        "200/cropped-0.png",
+        "200/cropped-1.png"
+    ],
+    "cropped_images_timestamps": [
+        16000000
+    ]
+}
