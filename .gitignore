@@ -15,3 +15,13 @@ py-functions-amazon/ir-convolute-reduce.zip
 js-functions-amazon/ir-reduce.zip
 .DS_Store
 docker/credentials
+ibm/.terraform
+ibm/.terraform.lock.hcl
+ibm/terraform.tfstate
+ibm/terraform.tfstate.backup
+ibm/functions/ir-convolute-reduce.zip
+ibm/functions/ir-reduce.zip
+ibm/functions/ir-split.zip
+ibm/functions/preprocess-imgs.zip
+ibm/s3Credentials.json
+ibm/terraform.tfvars
