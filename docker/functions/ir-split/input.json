@@ -1,0 +1,5 @@
+{
+    "s3bucket": "apollo-bucket-image-convolution-frankfurt",
+    "s3prefix": "200",
+    "desired_num_splits": 2
+  }

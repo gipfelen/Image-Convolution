@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "b4bd2365-6fd0-49d6-a4ce-787c0c44c1c4",
+		"name": "Image-Convolution",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "sentim-batch",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"s3bucket\": \"terraform-bucket-image-convolution\",\n  \"s3prefix\": \"200\",\n  \"desired_num_splits\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://ir-split",
+					"protocol": "https",
+					"host": [
+						"ir-split"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "preprocess-imgs",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"s3bucket\": \"terraform-bucket-image-convolution\",\n    \"images_s3_keys\": [\n        \"200/0.png\",\n        \"200/1.png\",\n        \"200/10.png\",\n        \"200/100.png\",\n        \"200/101.png\",\n        \"200/102.png\",\n        \"200/103.png\",\n        \"200/104.png\",\n        \"200/105.png\",\n        \"200/106.png\",\n        \"200/107.png\",\n        \"200/108.png\",\n        \"200/109.png\",\n        \"200/11.png\",\n        \"200/110.png\",\n        \"200/111.png\",\n        \"200/112.png\",\n        \"200/113.png\",\n        \"200/114.png\",\n        \"200/115.png\",\n        \"200/116.png\",\n        \"200/117.png\",\n        \"200/118.png\",\n        \"200/119.png\",\n        \"200/12.png\",\n        \"200/120.png\",\n        \"200/121.png\",\n        \"200/122.png\",\n        \"200/123.png\",\n        \"200/124.png\",\n        \"200/125.png\",\n        \"200/126.png\",\n        \"200/127.png\",\n        \"200/128.png\",\n        \"200/129.png\",\n        \"200/13.png\",\n        \"200/130.png\",\n        \"200/131.png\",\n        \"200/132.png\",\n        \"200/133.png\",\n        \"200/134.png\",\n        \"200/135.png\",\n        \"200/136.png\",\n        \"200/137.png\",\n        \"200/138.png\",\n        \"200/139.png\",\n        \"200/14.png\",\n        \"200/140.png\",\n        \"200/141.png\",\n        \"200/142.png\",\n        \"200/143.png\",\n        \"200/144.png\",\n        \"200/145.png\",\n        \"200/146.png\",\n        \"200/147.png\",\n        \"200/148.png\",\n        \"200/149.png\",\n        \"200/15.png\",\n        \"200/150.png\",\n        \"200/151.png\",\n        \"200/152.png\",\n        \"200/153.png\",\n        \"200/154.png\",\n        \"200/155.png\",\n        \"200/156.png\",\n        \"200/157.png\",\n        \"200/158.png\",\n        \"200/159.png\",\n        \"200/16.png\",\n        \"200/160.png\",\n        \"200/161.png\",\n        \"200/162.png\",\n        \"200/163.png\",\n        \"200/164.png\",\n        \"200/165.png\",\n        \"200/166.png\",\n        \"200/167.png\",\n        \"200/168.png\",\n        \"200/169.png\",\n        \"200/17.png\",\n        \"200/170.png\",\n        \"200/171.png\",\n        \"200/172.png\",\n        \"200/173.png\",\n        \"200/174.png\",\n        \"200/175.png\",\n        \"200/176.png\",\n        \"200/177.png\",\n        \"200/178.png\",\n        \"200/179.png\",\n        \"200/18.png\",\n        \"200/180.png\",\n        \"200/181.png\",\n        \"200/182.png\",\n        \"200/183.png\",\n        \"200/184.png\",\n        \"200/185.png\",\n        \"200/186.png\",\n        \"200/187.png\",\n        \"200/188.png\",\n        \"200/189.png\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://preprocess-imgs",
+					"protocol": "https",
+					"host": [
+						"preprocess-imgs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ir-convolute-reduce",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"s3bucket\": \"terraform-bucket-image-convolution\",\n    \"cropped_images_s3_keys\": [\n        \"200/cropped-0.png\",\n        \"200/cropped-1.png\"\n    ],\n    \"cropped_images_timestamps\": [\n        16000000\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://ir-convolute-reduce",
+					"protocol": "https",
+					"host": [
+						"ir-convolute-reduce"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ir-reduce",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"invalid_units_frame_keys_batches\": [[\n        \"200/cropped-0.png\",\n        \"200/cropped-1.png\"\n    ]],\n    \"invalid_units_frame_timestamps_batches\": [[\n        16000000,\n        16000000\n    ]],\n    \"ingested_frame_keys_batches\": [[\n        \"200/cropped-0.png\",\n        \"200/cropped-1.png\"\n    ]],\n    \"ingested_frame_timestamps_batches\": [[\n        16000000\n    ]]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https:/ir-reduce",
+					"host": [
+						"https"
+					],
+					"port": "",
+					"path": [
+						"ir-reduce"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

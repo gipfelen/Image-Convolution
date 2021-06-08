@@ -1,0 +1,17 @@
+{
+    "invalid_units_frame_keys_batches": [[
+        "200/cropped-0.png",
+        "200/cropped-1.png"
+    ]],
+    "invalid_units_frame_timestamps_batches": [[
+        16000000,
+        16000000
+    ]],
+    "ingested_frame_keys_batches": [[
+        "200/cropped-0.png",
+        "200/cropped-1.png"
+    ]],
+    "ingested_frame_timestamps_batches": [[
+        16000000
+    ]]
+}
