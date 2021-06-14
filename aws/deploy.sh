@@ -14,6 +14,7 @@ helpmenu () {
    echo -e "\t--help\t\t\tShow this help output."
    echo -e "\t--region region\t\tSets a specific region for the deployment. Use a region from:"
    echo -e "\t\t\t\thttps://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html"
+   echo -e "\t--bucket bucket_name\tSets a specific bucket name for the deployment."
    echo -e "\t--url\t\t\tPrints out all deployment urls"
    echo -e "\t--mappings\t\tCreates typeMapping.json with the deployment urls"
 }
@@ -27,7 +28,8 @@ createMappings () {
 }
 
 
-region="us-east-1"
+region="eu-central-1"
+bucket="apollo-bucket-image-convolution-frankfurt"
 
 while [ ! $# -eq 0 ]
 do
@@ -53,6 +55,15 @@ do
                 exit
             fi
 			;;
+		--bucket)
+            if [ -n "$2" ]; then
+			    bucket=$2
+			    shift
+            else
+                helpmenu
+                exit
+            fi
+			;;
 	esac
 	shift
 done
@@ -67,6 +78,6 @@ rm lambda-functions/*.zip
 
 terraform init
 
-terraform apply -auto-approve -var="region=$region"
+terraform apply -auto-approve -var="region=$region" -var="bucket_name=$bucket"
 
 rm lambda-functions/*.zip

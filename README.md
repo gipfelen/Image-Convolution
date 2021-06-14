@@ -4,10 +4,8 @@ This workflow performs industrial optical QA on a large set of input images.
 
 #### Overview
 
-This repository contains a parallel implementation, orchestrated with the Abstract Function Choreography Language and runnable with upcoming Enactment Engines that support free data flow.
+This repository contains a parallel implementation, orchestrated with the Abstract Function Choreography Language and runnable on the [Apollo Engine](https://github.com/Apollo-Core)
 
-There is one workflow flavor:
-* `workflows` are aspirational workflows where the dataflow is optimized to its theoretical limit, but are not tested on the current version of xAFCL.
 
 ![workflow-slim diagram](./diagrams/workflow.svg)
 
@@ -46,34 +44,28 @@ Then, update `input.json` with the desired parallelism. The default is 2. This y
 }
 ```
 
-#### Deploy the serverless functions
+#### Autodeploy
+1. Save the credentials for your cloud provider in the according subfolder:
+   - AWS: Put credential file under `aws/credentials`
+   - IBM:
+     - Add `ibmcloud_api_key` to `ibm/terraform.tfvars`
+     - Add S3 credentials from AWS to `ibm/s3Credentials`
+2. 
+   - A: Deploy to all providers:
+        Run from root dir `docker run --rm -it --entrypoint=/app/deployAll.sh -v ${PWD}:/app/ chrisengelhardt/apollo-autodeploy`
+   - B: Deploy single provider with custom settings:
+        Run `docker run --rm -v ${PWD}:/app/ chrisengelhardt/apollo-autodeploy --help` from within the directory of your chosen cloud provider
 
-The serverless functions are in `js-functions-amazon`, `js-functions-google` and `py-functions-amazon` and `py-functions-google`. You can deploy a mix of them to Amazon and Google, but deploy every functions from `js` and `py` at least once.
-
-Take note that you properly deploy the functions, including dependencies as is practice (Python: `requirements.txt`, JavaScript: `package.json`).
-
-#### Run the workflow
-
-The current version of the [xAFCL Enactment Engine](https://github.com/sashkoristov/enactmentengine) does not yet support the data flow. Please come back later!
-
-
-<!--
-Open `workflow.yaml`, and update the `resource` fields to the ARNs of your deployed Lambdas. You can find the URIs in your AWS Lambda Console or in your Google Cloud Console.
-
-```yaml
- ...
- properties:
-    - name: "resource"
-      value: "arn:aws:lambda:XXXXXXXXXXXXXXXXXXXXXX:sentim-inference"
- ...
-```
-
-Then, you can run the workflow:
+Note: For IBM you have to create a namespace first and place it into `ibm.tf` at line `namespace = "YOURNAMESPACE"`.
 
 ```
-$ java -jar YOUR_PATH_TO_xAFCL.jar ./workflow.yaml ./input.json
+Usage: /app/deploy.sh [--help] [--region region] [--url] [--mapping]
+
+Commands:
+        --help                  Show this help output.
+        --region region         Sets a specific region for the deployment. Use a region from:
+                                https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html
+        --bucket bucket_name    Sets a specific bucket name for the deployment.
+        --url                   Prints out all deployment urls
+        --mappings              Creates typeMapping.json with the deployment urls
 ```
-
--->
-
-#### References

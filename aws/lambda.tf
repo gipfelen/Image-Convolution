@@ -6,6 +6,12 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "bucket_name" {
+  type        = string
+  description = "The AWS bucket name for the deployment."
+  default = "apollo-bucket-image-convolution-frankfurt"
+}
+
 provider "aws" {
   shared_credentials_file = "credentials"
   region                  = var.region
@@ -87,7 +93,7 @@ resource "aws_lambda_layer_version" "numpy_layer" {
 
 resource "aws_s3_bucket" "b1" {
 
-   bucket = "apollo-bucket-image-convolution-frankfurt"
+   bucket = var.bucket_name
    
    acl    = "public-read"   # or can be "public-read"
    
@@ -107,23 +113,23 @@ resource "aws_s3_bucket_object" "dataset200" {
     etag = filemd5("../datasets/200/${each.value}")
 }
 
-# resource "aws_s3_bucket_object" "dataset400" {
-#     for_each = fileset("../datasets/400/", "*")
-#     bucket = aws_s3_bucket.b1.id
-#     key = "400/${each.value}"
-#     acl    = "public-read"  # or can be "public-read"
-#     source = "../datasets/400/${each.value}"
-#     etag = filemd5("../datasets/400/${each.value}")
-# }
+resource "aws_s3_bucket_object" "dataset400" {
+    for_each = fileset("../datasets/400/", "*")
+    bucket = aws_s3_bucket.b1.id
+    key = "400/${each.value}"
+    acl    = "public-read"  # or can be "public-read"
+    source = "../datasets/400/${each.value}"
+    etag = filemd5("../datasets/400/${each.value}")
+}
 
-# resource "aws_s3_bucket_object" "dataset800" {
-#     for_each = fileset("../datasets/800/", "*")
-#     bucket = aws_s3_bucket.b1.id
-#     key = "800/${each.value}"
-#     acl    = "public-read"  # or can be "public-read"
-#     source = "../datasets/800/${each.value}"
-#     etag = filemd5("../datasets/800/${each.value}")
-# }
+resource "aws_s3_bucket_object" "dataset800" {
+    for_each = fileset("../datasets/800/", "*")
+    bucket = aws_s3_bucket.b1.id
+    key = "800/${each.value}"
+    acl    = "public-read"  # or can be "public-read"
+    source = "../datasets/800/${each.value}"
+    etag = filemd5("../datasets/800/${each.value}")
+}
 
 
 
@@ -155,7 +161,7 @@ resource "aws_lambda_function" "lambda" {
 
 
 ############################################
-# Gateway sentim-inference-textblob_new    #
+# Gateway iamge-convolution                #
 ############################################
 
 resource "aws_api_gateway_rest_api" "example" {
