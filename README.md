@@ -49,7 +49,7 @@ Then, update `input.json` with the desired parallelism. The default is 2. This y
    - AWS: Put credential file under `aws/credentials`
    - IBM:
      - Add `ibmcloud_api_key` to `ibm/terraform.tfvars`
-     - Add S3 credentials from AWS to `ibm/s3Credentials`
+     - Add S3 credentials from AWS to `ibm/s3Credentials.json`
 2. 
    - A: Deploy to all providers:
         Run from root dir `docker run --rm -it --entrypoint=/app/deployAll.sh -v ${PWD}:/app/ chrisengelhardt/apollo-autodeploy`
