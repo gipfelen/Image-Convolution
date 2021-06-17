@@ -1,4 +1,15 @@
 const AWS = require("aws-sdk");
+const fs = require('fs')
+const path = './config.json'
+
+try {
+  if (fs.existsSync(path)) {
+    AWS.config.loadFromPath('./config.json');
+  }
+} catch(err) {
+  console.error(err)
+}
+
 const s3 = new AWS.S3();
 
 
@@ -55,13 +66,4 @@ exports.handler = async (event) => {
 };
 
 //IBM
-async function ibm_handler(params) {
-  const body = params
-  result = await ir_split(body)
-
-  return JSON.stringify({
-    num_batches: result.numBatches,
-    batches: result.batches,
-  });
-}
-exports.main = ibm_handler;
+exports.main = ir_split;

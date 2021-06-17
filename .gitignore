@@ -29,3 +29,7 @@ aws/lambda-functions/preprocess-imgs.zip
 aws/lambda-functions/ir-split.zip
 aws/lambda-functions/ir-reduce.zip
 aws/lambda-functions/ir-convolute-reduce.zip
+aws/tmp/ir-convolute-reduce.zip
+aws/tmp/ir-reduce.zip
+aws/tmp/ir-split.zip
+aws/tmp/preprocess-imgs.zip

@@ -9,7 +9,7 @@ import os
 MAX_DEVIATION = 5
 
 
-def ir_convolute_reduce(json_input):
+def ir_convolute_reduce(json_input,client):
     cropped_images_s3_keys = json_input["cropped_images_s3_keys"]
     cropped_images_timestamps = json_input["cropped_images_timestamps"]
     s3bucket = json_input["s3bucket"]
@@ -18,7 +18,6 @@ def ir_convolute_reduce(json_input):
     invalid_units_max_deviation = []
     invalid_units_timestamps = []
 
-    client = boto3.client("s3")
     for idx, imgss3key in enumerate(cropped_images_s3_keys):
 
         # Fetch image from S3
@@ -77,25 +76,33 @@ def ir_convolute_reduce(json_input):
 
     return res
 
-
 # IBM wrapper
 def main(args):
-    res = ir_convolute_reduce(args)
+    client = boto3.client(
+        's3',
+        aws_access_key_id=credentials['accessKeyId'],
+        aws_secret_access_key=credentials['secretAccessKey'],
+    )
+    res = ir_convolute_reduce(args,client)
     return res
 
 
 def lambda_handler(event, context):
+    client = boto3.client("s3")
+
     # read in the args from the POST object
     json_input = json.loads(event["body"])
-    res = ir_convolute_reduce(json_input)
+    res = ir_convolute_reduce(json_input,client)
     return {"statusCode": 200, "body": json.dumps(res)}
 
 
 # Docker wrapper
 if __name__ == "__main__":
+    client = boto3.client("s3")
+
     # read the json
     json_input = json.loads(open("jsonInput.json").read())
-    result = ir_convolute_reduce(json_input)
+    result = ir_convolute_reduce(json_input, client)
 
     # write to std out
     print(json.dumps(result))

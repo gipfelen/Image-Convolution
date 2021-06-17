@@ -139,7 +139,7 @@ resource "aws_s3_bucket_object" "dataset800" {
 
 locals {
   function_names = ["ir-split","preprocess-imgs","ir-convolute-reduce","ir-reduce"]
-  function_paths = ["lambda-functions/ir-split.zip","lambda-functions/preprocess-imgs.zip","lambda-functions/ir-convolute-reduce.zip","lambda-functions/ir-reduce.zip"]
+  function_paths = ["tmp/ir-split.zip","tmp/preprocess-imgs.zip","tmp/ir-convolute-reduce.zip","tmp/ir-reduce.zip"]
   function_runtimes = ["nodejs14.x","python3.8","python3.8","nodejs14.x"]
   function_handlers = ["index.handler","lambda_function.lambda_handler","lambda_function.lambda_handler","index.handler"]
   function_layers = [[],[aws_lambda_layer_version.cv2_layer.arn, aws_lambda_layer_version.numpy_layer.arn],[aws_lambda_layer_version.cv2_layer.arn, aws_lambda_layer_version.numpy_layer.arn],[]]

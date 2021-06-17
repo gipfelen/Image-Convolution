@@ -12,11 +12,10 @@ H = 410
 W = 410
 
 
-def preprocess_imgs(json_input):
+def preprocess_imgs(json_input,client):
     imgss3keys = json_input["images_s3_keys"]
     s3bucket = json_input["s3bucket"]
     # # Each image
-    client = boto3.client("s3")
     croppedimgss3keys = []
     for imgss3key in imgss3keys:
 
@@ -79,22 +78,31 @@ def preprocess_imgs(json_input):
 
 # IBM wrapper
 def main(args):
-    res = preprocess_imgs(args)
+    client = boto3.client(
+        's3',
+        aws_access_key_id=credentials['accessKeyId'],
+        aws_secret_access_key=credentials['secretAccessKey'],
+    )
+    res = preprocess_imgs(args,client)
     return res
 
 
 def lambda_handler(event, context):
+    client = boto3.client("s3")
+
     # read in the args from the POST object
     json_input = json.loads(event["body"])
-    res = preprocess_imgs(json_input)
+    res = preprocess_imgs(json_input,client)
     return {"statusCode": 200, "body": json.dumps(res)}
 
 
 # Docker wrapper
 if __name__ == "__main__":
+    client = boto3.client("s3")
+
     # read the json
     json_input = json.loads(open("jsonInput.json").read())
-    result = preprocess_imgs(json_input)
+    result = preprocess_imgs(json_input, client)
 
     # write to std out
     print(json.dumps(result))

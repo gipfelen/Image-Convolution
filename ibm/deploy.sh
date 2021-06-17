@@ -59,10 +59,10 @@ done
 
 rm functions/*.zip
 
-./build.sh --installNode functions/ir-split
-./build.sh functions/preprocess-imgs
-./build.sh functions/ir-convolute-reduce 
-./build.sh functions/ir-reduce
+./build.sh --installNode ../functions/ir-split
+./build.sh ../functions/preprocess-imgs
+./build.sh ../functions/ir-convolute-reduce 
+./build.sh ../functions/ir-reduce
 
 
 terraform init

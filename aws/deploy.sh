@@ -68,16 +68,17 @@ do
 	shift
 done
 
-rm lambda-functions/*.zip
+mkdir -p tmp
+rm tmp/*.zip
 
 
-./build.sh lambda-functions/ir-split
-./build.sh lambda-functions/preprocess-imgs
-./build.sh lambda-functions/ir-convolute-reduce 
-./build.sh lambda-functions/ir-reduce
+./build.sh ../functions/ir-split
+./build.sh ../functions/preprocess-imgs
+./build.sh ../functions/ir-convolute-reduce 
+./build.sh ../functions/ir-reduce
 
 terraform init
 
 terraform apply -auto-approve -var="region=$region" -var="bucket_name=$bucket"
 
-rm lambda-functions/*.zip
+rm tmp/*.zip
