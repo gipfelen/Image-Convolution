@@ -4,18 +4,12 @@ dataIns:
 - name: "s3bucket"
   type: "string"
   source: "s3bucket"
-- name: "topic_arn"
-  type: "string"
-  source: "topic_arn"
 - name: "desired_num_splits"
   type: "number"
   source: "desired_num_splits"
 - name: "s3prefix"
   type: "string"
   source: "s3prefix"
-- name: "region"
-  type: "string"
-  source: "region"
 workflowBody:
 - function:
     name: "ir-split"
