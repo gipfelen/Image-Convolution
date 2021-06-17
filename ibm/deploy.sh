@@ -57,7 +57,8 @@ do
 	shift
 done
 
-rm functions/*.zip
+mkdir -p tmp
+rm tmp/*.zip
 
 ./build.sh --installNode ../functions/ir-split
 ./build.sh ../functions/preprocess-imgs
@@ -69,4 +70,4 @@ terraform init
 
 terraform apply -auto-approve -var="region=$region"
 
-rm functions/*.zip
+rm tmp/*.zip

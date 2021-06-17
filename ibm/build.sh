@@ -18,28 +18,33 @@ if [[ $1 == "--installNode" ]] ; then
         exit 1
     fi
     folderName=$(basename $2)
+    pwd=$(pwd)
 
     cd $2
 
     mkdir -p ../tmp
     cp * ../tmp
     cd ../tmp
+    rm Dockerfile docker-runtime.js input.json
     npm install
-    cp ../../s3Credentials.json config.json
-    zip -r ../${folderName}.zip .
+    cp $pwd/s3Credentials.json config.json
+    zip -r $pwd/tmp/${folderName}.zip .
     cd ..
     rm -r tmp
 
 else 
     folderName=$(basename $1)
+    pwd=$(pwd)
 
     cd $1
 
     mkdir -p ../tmp
     cp * ../tmp
     cd ../tmp
-    cp ../../s3Credentials.json config.json
-    zip -r ../${folderName}.zip .
+    cp $pwd/s3Credentials.json config.json
+    rm Dockerfile docker-runtime.js input.json
+    [ -f main.py ] && mv main.py __main__.py
+    zip -r $pwd/tmp/${folderName}.zip .
     cd ..
     rm -r tmp
 fi

@@ -78,6 +78,9 @@ def ir_convolute_reduce(json_input,client):
 
 # IBM wrapper
 def main(args):
+    with open('config.json') as json_file:
+        credentials = json.load(json_file)
+    
     client = boto3.client(
         's3',
         aws_access_key_id=credentials['accessKeyId'],

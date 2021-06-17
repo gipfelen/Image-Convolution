@@ -41,7 +41,7 @@ resource "ibm_function_action" "functionsNode" {
 
   exec {
     kind = "nodejs:12"
-    code_path = "functions/${local.function_node_names[count.index]}.zip"
+    code_path = "tmp/${local.function_node_names[count.index]}.zip"
   }
 
   # Timeout and memory
@@ -71,7 +71,7 @@ resource "ibm_function_action" "functionsPython" {
   exec {
     kind   = "blackbox"    
     image  = "gipfelen/cv2-for-ibm-linux-env"
-    code_path = "functions/${local.function_python_names[count.index]}.zip"
+    code_path = "tmp/${local.function_python_names[count.index]}.zip"
   }
 
   # Timeout and memory

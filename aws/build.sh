@@ -20,7 +20,7 @@ mkdir -p ../tmp
 cp * ../tmp
 cd ../tmp
 [ -f main.py ] && mv main.py lambda_function.py
-rm Dockerfile docker-runtime.js
+rm Dockerfile docker-runtime.js input.json
 zip -r $pwd/tmp/${folderName}.zip .
 cd ..
 rm -r tmp
